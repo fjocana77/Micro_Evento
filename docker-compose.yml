@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  micro_evento:
+    build:
+      context: ./micro_Evento
+      dockerfile: Dockerfile
+    ports:
+      - "8004:8004"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb_eventos:3306/sisbd_eventos
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 123
+    depends_on:
+      - mysqldb_eventos
+    networks:
+      - mynetwork
+
+  mysqldb_eventos:
+    image: mysql:8
+    container_name: mysqldb_eventos
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_DATABASE: sisbd_eventos
+    volumes:
+      - ./db_data_eventos:/var/lib/mysql
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
